@@ -1,6 +1,7 @@
 ﻿from crypto_data import CryptoCurrencyData
 from binance_api import get_price_usdt_binance
 from coingecko_api import get_price_usd_coingecko
+from coinmarketcap_api import get_price_usdt_coinmarketcap
 from utils import format_price
 
 class CryptoDataCollector:
@@ -21,3 +22,8 @@ class CryptoDataCollector:
         if price is not None:
             print(f"Received CoinGecko price for {symbol}: {format_price(price)}")
             self.currencies_data[symbol.upper()].add_price('CoinGecko', price)
+    def fetch_price_usdt_coinmarketcap(self, symbol, api_key):
+        price = get_price_usdt_coinmarketcap(symbol, api_key)
+        if price is not None:
+            print(f"Received CoinMarketCap price for {symbol}: {format_price(price)}")
+            self.currencies_data[symbol.upper()].add_price('CoinMarketCap', price)
