@@ -77,19 +77,32 @@ def add_symbol(symbol, name):
 
 
 def add_source(name, api_url=None, api_key=None, enabled=True):
-    """Добавляет новый источник данных в таблицу sources."""
+    """Добавляет новый источник данных в таблицу sources или обновляет существующий."""
     connection = create_connection()
     try:
         with connection.cursor() as cursor:
+            # Проверяем, существует ли уже источник с таким именем
             cursor.execute("SELECT COUNT(*) FROM sources WHERE name = %s", (name,))
             if cursor.fetchone()[0] > 0:
-                print(f"Источник {name} уже существует.")
-                return
-            cursor.execute("INSERT INTO sources (name, api_url, api_key, enabled) VALUES (%s, %s, %s, %s)", (name, api_url, api_key, enabled))
+                # Если источник существует, обновляем его данные
+                update_query = """
+                    UPDATE sources
+                    SET api_url = %s, api_key = %s, enabled = %s
+                    WHERE name = %s
+                """
+                cursor.execute(update_query, (api_url, api_key, enabled, name))
+                print(f"Информация для источника {name} обновлена.")
+            else:
+                # Если источник не существует, добавляем его как новую запись
+                insert_query = """
+                    INSERT INTO sources (name, api_url, api_key, enabled)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (name, api_url, api_key, enabled))
+                print(f"Источник данных {name} добавлен.")
             connection.commit()
-            print(f"Источник данных {name} добавлен.")
     except mysql.connector.Error as error:
-        print(f"Ошибка при добавлении источника {name}: {error}")
+        print(f"Ошибка при работе с источником {name}: {error}")
     finally:
         connection.close()
 
