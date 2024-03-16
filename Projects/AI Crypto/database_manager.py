@@ -159,7 +159,7 @@ def get_source_id(source_name):
     connection = create_connection()
     try:
         with connection.cursor(buffered=True) as cursor:
-            query = "SELECT id FROM sources WHERE name = %s"
+            query = "SELECT source_id FROM sources WHERE name = %s"
             cursor.execute(query, (source_name,))
             result = cursor.fetchone()
             if result:
@@ -189,14 +189,16 @@ def get_price_data():
 def get_api_key(source_name):
     """Возвращает ключ API для указанного источника."""
     connection = create_connection()
-    cursor = connection.cursor()
-    query = "SELECT api_key FROM sources WHERE name = %s"
-    cursor.execute(query, (source_name,))
-    result = cursor.fetchone()
-    cursor.close()
-    connection.close()
-    if result:
-        return result[0]  # Возвращает первый элемент кортежа, который должен быть api_key
-    else:
-        return None
-
+    try:
+        with connection.cursor() as cursor:
+            query = "SELECT api_key FROM sources WHERE name = %s"
+            cursor.execute(query, (source_name,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]  # Возвращает первый элемент кортежа, который должен быть api_key
+    except mysql.connector.Error as error:
+        print(f"Ошибка при получении API ключа для {source_name}: {error}")
+    finally:
+        if connection.is_connected():
+            connection.close()
+    return None
