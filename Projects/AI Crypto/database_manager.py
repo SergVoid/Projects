@@ -44,51 +44,54 @@ def get_active_sources():
     connection.close()
     return sources
 
+import mysql.connector
+from DB import host, user, passwd, database
+
 def create_connection():
     """Создает соединение с базой данных."""
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        passwd="1357924680",
-        database="crypto_data"
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        passwd=passwd,
+        database=database
     )
-    return connection
+
+
 
 def add_symbol(symbol, name):
     """Добавляет новую криптовалюту в таблицу symbols с проверкой на дубликаты."""
+    connection = create_connection()
     try:
-        connection = create_connection()
-        cursor = connection.cursor()
-        
-        # Проверяем, существует ли уже такой символ
-        cursor.execute("SELECT COUNT(*) FROM symbols WHERE ticker = %s", (symbol,))
-        if cursor.fetchone()[0] > 0:
-            print(f"Символ {symbol} уже существует.")
-            return
-        
-        query = "INSERT INTO symbols (ticker, name) VALUES (%s, %s)"
-        values = (symbol, name)
-        cursor.execute(query, values)
-        connection.commit()
-        print(f"Криптовалюта {name} добавлена.")
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM symbols WHERE ticker = %s", (symbol,))
+            if cursor.fetchone()[0] > 0:
+                print(f"Символ {symbol} уже существует.")
+                return
+            cursor.execute("INSERT INTO symbols (ticker, name) VALUES (%s, %s)", (symbol, name))
+            connection.commit()
+            print(f"Криптовалюта {name} добавлена.")
     except mysql.connector.Error as error:
         print(f"Ошибка при добавлении символа {symbol}: {error}")
     finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
+        connection.close()
 
-def add_source(name, api_url=None, api_key=None):
+
+def add_source(name, api_url=None, api_key=None, enabled=True):
     """Добавляет новый источник данных в таблицу sources."""
     connection = create_connection()
-    cursor = connection.cursor()
-    query = "INSERT INTO sources (name, api_url, api_key) VALUES (%s, %s, %s)"
-    values = (name, api_url, api_key)
-    cursor.execute(query, values)
-    connection.commit()
-    cursor.close()
-    connection.close()
-    print(f"Источник данных {name} добавлен.")
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM sources WHERE name = %s", (name,))
+            if cursor.fetchone()[0] > 0:
+                print(f"Источник {name} уже существует.")
+                return
+            cursor.execute("INSERT INTO sources (name, api_url, api_key, enabled) VALUES (%s, %s, %s, %s)", (name, api_url, api_key, enabled))
+            connection.commit()
+            print(f"Источник данных {name} добавлен.")
+    except mysql.connector.Error as error:
+        print(f"Ошибка при добавлении источника {name}: {error}")
+    finally:
+        connection.close()
 
 def view_symbols():
     """Отображает список всех криптовалют."""

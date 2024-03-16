@@ -6,8 +6,6 @@ import time
 from data_collector import CryptoDataCollector
 from utils import format_price_and_volume
 
-# Предполагается, что COINMARKETCAP_API_KEY уже определён в database_manager.py или другом конфигурационном файле
-# COINMARKETCAP_API_KEY = 'ваш_COINMARKETCAP_API_KEY'
 
 def fetch_prices():
     start_time = datetime.now()
@@ -34,8 +32,7 @@ def fetch_prices():
             elif source_name == 'CoinGecko':
                 collector.fetch_price_usd_coingecko(symbol)
             elif source_name == 'CoinMarketCap':
-                COINMARKETCAP_API_KEY = database_manager.get_api_key('CoinMarketCap')
-                collector.fetch_price_usdt_coinmarketcap(symbol, api_key=COINMARKETCAP_API_KEY)
+                collector.fetch_price_usdt_coinmarketcap(symbol, api_key=database_manager.get_api_key('CoinMarketCap'))
             
             # Получаем цену и объем из данных, собранных collector'ом
             # Убедитесь, что метод add_price возвращает также объем, если это необходимо
