@@ -1,8 +1,8 @@
 import requests
 from datetime import datetime
 
-def get_price_usdt_binance(symbol):
-    url = "https://api.binance.com/api/v3/ticker/price"
+def get_price_and_volume_usdt_binance(symbol):
+    url = "https://api.binance.com/api/v3/ticker/24hr"
     params = {'symbol': symbol.upper() + "USDT"}
     start_time = datetime.now()
     response = requests.get(url, params=params)
@@ -12,12 +12,10 @@ def get_price_usdt_binance(symbol):
 
     if response.status_code == 200:
         data = response.json()
-        price = float(data['price'])
+        price = float(data['lastPrice'])
+        volume = float(data['volume'])
         print(f"Binance price for {symbol}: {price}")
-
-        # Пример, где объём не получен напрямую от API в этом запросе.
-        # Возвращаем None для объёма, чтобы сохранить согласованность интерфейса функции.
-        volume = None  
+        print(f"Binance 24h volume for {symbol}: {volume}")
 
         return price, volume
     else:

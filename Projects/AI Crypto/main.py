@@ -9,6 +9,7 @@ from utils import format_price_and_volume
 
 def fetch_prices():
     start_time = datetime.now()
+    session_timestamp = datetime.now()
     print(f"\nFetching prices started at {start_time}\n")
 
     collector = CryptoDataCollector()
@@ -39,7 +40,7 @@ def fetch_prices():
             price, volume = collector.currencies_data[symbol.upper()].get_price_and_volume(source_name)
             
             if symbol_id and source_id and price is not None:
-                database_manager.add_price_data(symbol_id, source_id, price, volume)
+                database_manager.add_price_data(symbol_id, source_id, price, volume, session_timestamp)
                 print(f"Данные для {symbol} от {source_name} успешно добавлены.")
     
     end_time = datetime.now()
@@ -48,14 +49,13 @@ def fetch_prices():
 
 def display_prices_table():
     data = database_manager.get_price_data()
-    # Заголовки и ширина колонок
-    print(f"{'Currency':<8} {'Source':<15} {'Price':>10} {'Volume':>20} {'Timestamp':>20}")
-    print("-" * 75)
+    print(f"{'Currency':<8} {'Source':<15} {'Price':>10} {'Volume (in billions)':>25} {'Timestamp'}")
+    print("-" * 85)
 
     for row in data:
         ticker, source_name, price, volume, timestamp = row
-        # Форматирование строк с заданием ширины колонок
-        print(f"{ticker:<8} {source_name:<15} {price:>10.2f} {volume:>20.2f} {timestamp:>20}")
+        volume_in_billions = volume / 1_000_000_000  # Перевод объема в миллиарды для упрощения отображения
+        print(f"{ticker:<8} {source_name:<15} {price:>10.2f} {volume_in_billions:>25.2f} {timestamp}")
 
 # Пример логирования длительности запроса (не включено в таблицу)
 def log_request_duration(source_name, duration):
