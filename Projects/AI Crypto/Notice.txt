@@ -1,4 +1,0 @@
-mysql
-crypto_data
-root
-1357924680
