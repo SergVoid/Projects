@@ -17,17 +17,3 @@ class CryptoDataCollector:
         if price is not None:
             print(f"Received Binance price for {symbol}: {format_price_and_volume(price, volume)}")
             self.currencies_data[symbol.upper()].add_price('Binance', price, volume)
-
-    def fetch_price_usd_coingecko(self, symbol):
-        price, volume = get_price_usd_coingecko(symbol)
-        if price is not None:
-            formatted_price, formatted_volume = format_price_and_volume(price, volume)
-            print(f"Received CoinGecko price for {symbol}: {formatted_price}, Volume: {formatted_volume}")
-            self.currencies_data[symbol.upper()].add_price('CoinGecko', price, volume)
-
-    def fetch_price_usdt_coinmarketcap(self, symbol, api_key):
-        price, volume = get_price_usdt_coinmarketcap(symbol, api_key)
-        if price is not None:
-            formatted_price, formatted_volume = format_price_and_volume(price, volume)
-            print(f"Received CoinMarketCap price for {symbol}: {formatted_price}, Volume: {formatted_volume}")
-            self.currencies_data[symbol.upper()].add_price('CoinMarketCap', price, volume)

@@ -29,12 +29,7 @@ def fetch_prices():
 
             # Проверяем, откуда получать данные
             if source_name == 'Binance':
-                collector.fetch_price_usdt_binance(symbol)
-            elif source_name == 'CoinGecko':
-                collector.fetch_price_usd_coingecko(symbol)
-            elif source_name == 'CoinMarketCap':
-                collector.fetch_price_usdt_coinmarketcap(symbol, api_key=database_manager.get_api_key('CoinMarketCap'))
-            
+                collector.fetch_price_usdt_binance(symbol)          
             # Получаем цену и объем из данных, собранных collector'ом
             # Убедитесь, что метод add_price возвращает также объем, если это необходимо
             price, volume = collector.currencies_data[symbol.upper()].get_price_and_volume(source_name)
@@ -66,8 +61,8 @@ if __name__ == "__main__":
     fetch_prices()
     display_prices_table()
     # Здесь может быть ваше расписание для регулярного выполнения fetch_prices
-    # Например, запускать fetch_prices каждые 5 минут
-    schedule.every(5).minutes.do(fetch_prices)
+    # Например, запускать fetch_prices каждую минуту
+    schedule.every(1).minutes.do(fetch_prices)
     
     print("Script is set up to fetch cryptocurrency prices every 5 minutes.")
     print("Press Ctrl+C to stop.")
