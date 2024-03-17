@@ -44,13 +44,12 @@ def fetch_prices():
 
 def display_prices_table():
     data = database_manager.get_price_data()
-    print(f"{'Currency':<8} {'Source':<15} {'Price':>10} {'Volume (in billions)':>25} {'Timestamp'}")
+    print(f"{'Currency':<8} {'Source':<15} {'Price':>10} {'Volume 24H in token':>25} {'Timestamp'}")
     print("-" * 85)
 
     for row in data:
-        ticker, source_name, price, volume, timestamp = row
-        volume_in_billions = volume / 1_000_000_000  # Перевод объема в миллиарды для упрощения отображения
-        print(f"{ticker:<8} {source_name:<15} {price:>10.2f} {volume_in_billions:>25.2f} {timestamp}")
+        ticker, source_name, price, volume_24_token, timestamp = row 
+        print(f"{ticker:<8} {source_name:<15} {price:>10.2f} {volume_24_token:>25.2f} {timestamp}")
 
 # Пример логирования длительности запроса (не включено в таблицу)
 def log_request_duration(source_name, duration):
@@ -63,8 +62,8 @@ if __name__ == "__main__":
     # Здесь может быть ваше расписание для регулярного выполнения fetch_prices
     # Например, запускать fetch_prices каждую минуту
     schedule.every(1).minutes.do(fetch_prices)
-    
-    print("Script is set up to fetch cryptocurrency prices every 5 minutes.")
+    schedule.every(1).minutes.do(display_prices_table)
+    print("Script is set up to fetch cryptocurrency prices every 1 minutes.")
     print("Press Ctrl+C to stop.")
 
     try:

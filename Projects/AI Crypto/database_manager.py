@@ -130,15 +130,15 @@ def view_sources():
     cursor.close()
     connection.close()
 
-def add_price_data(symbol_id, source_id, price, volume=None, session_timestamp=None):
+def add_price_data(symbol_id, source_id, price, volume_24_token, session_timestamp=None):
     """Добавляет данные о цене в таблицу price_data с учетом времени сеанса."""
     connection = create_connection()
     cursor = connection.cursor()
     query = """
-    INSERT INTO price_data (symbol_id, source_id, price, volume, session_timestamp)
+    INSERT INTO price_data (symbol_id, source_id, price, volume_24_token, session_timestamp)
     VALUES (%s, %s, %s, %s, %s)
     """
-    values = (symbol_id, source_id, price, volume, session_timestamp)
+    values = (symbol_id, source_id, price, volume_24_token, session_timestamp)
     cursor.execute(query, values)
     connection.commit()
     cursor.close()
@@ -176,7 +176,7 @@ def get_price_data():
     connection = create_connection()
     cursor = connection.cursor()
     query = """
-    SELECT symbols.ticker, sources.name, price_data.price, price_data.volume, price_data.session_timestamp
+    SELECT symbols.ticker, sources.name, price_data.price, price_data.volume_24_token, price_data.session_timestamp
     FROM price_data
     JOIN symbols ON price_data.symbol_id = symbols.symbol_id
     JOIN sources ON price_data.source_id = sources.source_id

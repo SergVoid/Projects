@@ -1,7 +1,5 @@
 ﻿from crypto_data import CryptoCurrencyData
 from binance_api import get_price_and_volume_usdt_binance
-from coingecko_api import get_price_usd_coingecko
-from coinmarketcap_api import get_price_usdt_coinmarketcap
 from utils import format_price_and_volume
 
 class CryptoDataCollector:
