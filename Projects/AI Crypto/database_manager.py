@@ -1,6 +1,14 @@
 import mysql.connector
+from DB import host, user, passwd, database
 
-# Функции создания соединения, добавления символов и источников остаются без изменений
+def create_connection():
+    """Создает соединение с базой данных."""
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        passwd=passwd,
+        database=database
+    )
 
 def set_symbol_status(symbol, status):
     """Обновляет статус активности для символа."""
@@ -44,20 +52,6 @@ def get_active_sources():
     connection.close()
     return sources
 
-import mysql.connector
-from DB import host, user, passwd, database
-
-def create_connection():
-    """Создает соединение с базой данных."""
-    return mysql.connector.connect(
-        host=host,
-        user=user,
-        passwd=passwd,
-        database=database
-    )
-
-
-
 def add_symbol(symbol, name):
     """Добавляет новую криптовалюту в таблицу symbols с проверкой на дубликаты."""
     connection = create_connection()
@@ -74,7 +68,6 @@ def add_symbol(symbol, name):
         print(f"Ошибка при добавлении символа {symbol}: {error}")
     finally:
         connection.close()
-
 
 def add_source(name, api_url=None, api_key=None, enabled=True):
     """Добавляет новый источник данных в таблицу sources или обновляет существующий."""
