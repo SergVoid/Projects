@@ -5,8 +5,8 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 # Загрузка данных
-symbols = pd.read_csv('symbols.csv', names=['symbol_id', 'name', 'ticker', 'enabled'])
-price_data = pd.read_csv('price_data.csv', names=['id', 'symbol_id', 'source_id', 'timestamp', 'price', 'volume_24_token', 'session_timestamp', 'exported'])
+symbols = pd.read_csv('C:/ProgramData/MySQL/MySQL Server 8.3/Uploads/symbols/symbols.csv', names=['symbol_id', 'name', 'ticker', 'enabled'])
+price_data = pd.read_csv('C:/ProgramData/MySQL/MySQL Server 8.3/Uploads/price_data/price_data.csv', names=['id', 'symbol_id', 'source_id', 'timestamp', 'price', 'volume_24_token', 'session_timestamp', 'exported'])
 
 # Объединение данных о ценах с информацией о символах
 price_data = price_data.merge(symbols, on='symbol_id')
