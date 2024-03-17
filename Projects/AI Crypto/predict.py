@@ -3,12 +3,13 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.python.keras.models import load_model
-
+from joblib import load
 # Пути к файлам данных и модели
 symbols_file = 'C:/ProgramData/MySQL/MySQL Server 8.3/Uploads/symbols/symbols.csv'
 price_data_file = 'C:/ProgramData/MySQL/MySQL Server 8.3/Uploads/price_data/price_data.csv'
-model_file = 'C:/ProgramData/MySQL/MySQL Server 8.3/Uploads/predict.keras'  # Укажите путь к сохраненной модели
-
+model_file = 'C:/Users/SergVoid/Projects/Projects/AI Crypto/predict_model.keras'  # Укажите путь к сохраненной модели
+scaler_file_path = 'C:/Users/SergVoid/Projects/Projects/AI Crypto/scaler.joblib'
+scaler = load(scaler_file_path)
 # Загрузка данных
 symbols = pd.read_csv(symbols_file, names=['symbol_id', 'name', 'ticker', 'enabled'])
 price_data = pd.read_csv(price_data_file, names=['id', 'symbol_id', 'source_id', 'timestamp', 'price', 'volume_24_token', 'session_timestamp', 'exported'])
