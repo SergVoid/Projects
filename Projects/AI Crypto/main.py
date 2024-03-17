@@ -4,8 +4,6 @@ import database_manager
 import schedule
 import time
 from data_collector import CryptoDataCollector
-from utils import format_price_and_volume
-
 
 def fetch_prices():
     start_time = datetime.now()

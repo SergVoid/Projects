@@ -1,6 +1,5 @@
 ﻿from crypto_data import CryptoCurrencyData
 from binance_api import get_price_and_volume_usdt_binance
-from utils import format_price_and_volume
 
 class CryptoDataCollector:
     def __init__(self):
@@ -13,5 +12,5 @@ class CryptoDataCollector:
     def fetch_price_usdt_binance(self, symbol):
         price, volume = get_price_and_volume_usdt_binance(symbol)
         if price is not None:
-            print(f"Received Binance price for {symbol}: {format_price_and_volume(price, volume)}")
+            print(f"Received Binance price for {symbol}:  {f"${price:.2f} USDT", volume}")
             self.currencies_data[symbol.upper()].add_price('Binance', price, volume)
