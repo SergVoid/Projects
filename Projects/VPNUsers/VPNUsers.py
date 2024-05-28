@@ -3,7 +3,7 @@ from tkinter import messagebox, ttk
 import datetime
 
 # Путь к файлу
-file_path = "//store-02-71-by/ISD/VPNUsers.txt"
+file_path = "//VPNUsers.txt"
 
 # Словарь для сопоставления логинов с датами
 user_dates = {}
