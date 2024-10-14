@@ -1,9 +1,1 @@
-#TYPE System.Management.Automation.PSCustomObject
-"SamAccountName","ExpireDate"
-"a.andraichuk","20240730"
-"a.biassmertny","20240324"
-"A.Dobrzynska","20240618"
-"A.Dziamenchanka","20271215"
-"a.dziameshchyk","20300301"
-"A.Gorbachova","20240610"
-"a.hilimovich","20240426"
+
